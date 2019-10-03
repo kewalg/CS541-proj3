@@ -17,7 +17,7 @@ buildscript {
     tasks.withType(JavaCompile) {
         targetCompatibility = '1.7'
         sourceCompatibility = '1.7'
-        options.setBootClasspath("C://Program Files/Java/jdk-13/lib/rt.jar")
+        options.setBootClasspath("C:/Program Files/Java/jdk-13/lib/rt.jar")
     }
 }
 
