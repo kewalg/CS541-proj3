@@ -50,6 +50,10 @@ public class MyGame extends ApplicationAdapter {
         }
 */
 
+
+        if (Gdx.input.isTouched()){
+            velocity = -10;
+        }
         if (hero_AnimateSlow < 4) {
             hero_AnimateSlow++;
         } else {
