@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,9 +19,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import javax.xml.bind.Marshaller;
 
 import sun.rmi.runtime.Log;
+
+import static com.badlogic.gdx.math.MathUtils.random;
 
 public class MyGame extends ApplicationAdapter {
     private Stage stage, stage1;
@@ -37,6 +43,10 @@ public class MyGame extends ApplicationAdapter {
     float velocity = 0;
     float hero_YState;
     float hero_XState;
+    ArrayList<Integer> monX = new ArrayList<Integer>();
+    ArrayList<Integer> monY = new ArrayList<Integer>();
+    Texture monster;
+    int monCount = 0;
 
 
     @Override
@@ -46,6 +56,8 @@ public class MyGame extends ApplicationAdapter {
         hero = new Texture[10];
         hero_YState = Gdx.graphics.getHeight() / 2;
         hero_XState = 0;
+        Random random;
+        monster = new Texture("monster.png");
         hero[0] = new Texture("frame_1.png");
         hero[1] = new Texture("frame_2.png");
         hero[2] = new Texture("frame_3.png");
@@ -79,26 +91,32 @@ public class MyGame extends ApplicationAdapter {
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(stage1);
         Gdx.input.setInputProcessor(inputMultiplexer);
+        random = new Random();
+    }
 
+
+    public void genMonsters() {
+        float height = random.nextFloat() * Gdx.graphics.getHeight();
+        monY.add((int) height);
+        monX.add(Gdx.graphics.getWidth());
     }
 
     @Override
     public void render() {
         batch.begin();
         batch.draw(bg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        /*if (Gdx.input.isTouched()) {
-            velocity = -10;
-        }*/
-        /*if (hero_AnimateSlow < 4) {
-            hero_AnimateSlow++;
+        if (monCount < 100) {
+            monCount++;
         } else {
-            hero_AnimateSlow = 0;
-            if (heroPos < 9) {
-                heroPos++;
-            } else {
-                heroPos = 0;
-            }
-        }*/
+            monCount = 0;
+            genMonsters();
+        }
+
+        for (int i = 0; i < monY.size(); i++) {
+            batch.draw(monster, monX.get(i), monY.get(i));
+            monX.set(i, monX.get(i) - 4);
+        }
+
         velocity = velocity + gravity;
         hero_YState = hero_YState - velocity;
         if (hero_YState <= 0) {
