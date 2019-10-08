@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -57,6 +59,8 @@ public class MyGame extends ApplicationAdapter {
     int score = 0;
     BitmapFont font;
     int gameState = 0;
+    private Sound collision;
+    private Music bgmusic;
 
     @Override
     public void create() {
@@ -69,6 +73,12 @@ public class MyGame extends ApplicationAdapter {
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(10);
+        collision = Gdx.audio.newSound(Gdx.files.internal("collision.wav"));
+        bgmusic = Gdx.audio.newMusic(Gdx.files.internal("bgmusic.mp3"));
+        bgmusic.setLooping(true);
+        bgmusic.setVolume(0.1f);
+        bgmusic.play();
+
 
 
         //heroRectangle = new Rectangle();
@@ -239,6 +249,7 @@ public class MyGame extends ApplicationAdapter {
                 }
                 for (int i = 0; i < monRectangle.size(); i++) {
                     if (Intersector.overlaps(heroRectangle, monRectangle.get(i))) {
+                        collision.play();
                         monRectangle.remove(i);
                         monX.remove(i);
                         monY.remove(i);
@@ -267,5 +278,6 @@ public class MyGame extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
+        bgmusic.dispose();
     }
 }
