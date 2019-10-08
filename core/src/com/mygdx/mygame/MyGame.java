@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import org.w3c.dom.Text;
 import org.w3c.dom.css.Rect;
 
 import java.util.ArrayList;
@@ -57,13 +58,14 @@ public class MyGame extends ApplicationAdapter {
     int monCount = 0;
     Rectangle heroRectangle;
     int score = 0;
-    BitmapFont font;
+    BitmapFont font, font1;
     int gameState = 0;
-    private Sound collision;
     private Music bgmusic;
+    private Sound collision;
 
     @Override
     public void create() {
+        String myText = "Touch anywhere to play!";
         batch = new SpriteBatch();
         bg = new Texture("bg.png");
         hero = new Texture[10];
@@ -73,12 +75,13 @@ public class MyGame extends ApplicationAdapter {
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(10);
-        collision = Gdx.audio.newSound(Gdx.files.internal("collision.wav"));
+        font1 = new BitmapFont();
+        font1.getData().setScale(10, 10);
+        font1.setColor(Color.RED);
         bgmusic = Gdx.audio.newMusic(Gdx.files.internal("bgmusic.mp3"));
         bgmusic.setLooping(true);
-        bgmusic.setVolume(0.1f);
+        bgmusic.setVolume(0.01f);
         bgmusic.play();
-
 
 
         //heroRectangle = new Rectangle();
@@ -134,10 +137,17 @@ public class MyGame extends ApplicationAdapter {
         batch.begin();
         batch.draw(bg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        font1.draw(batch, "Touch anywhere to play!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
+
+        if (Gdx.input.isTouched()) {
+            font1.setColor(Color.CLEAR);
+            font1.dispose();
+        }
+
 
         if (gameState == 1) {
+            //   font1.dispose();
             //game is live
-            //game live
             //after every 100 count, generate one monster
             if (monCount < 100) {
                 monCount++;
@@ -152,7 +162,7 @@ public class MyGame extends ApplicationAdapter {
                 batch.draw(monster, monX.get(i), monY.get(i));
                 monX.set(i, monX.get(i) - 4);
                 //adding rectangle border to monster
-                monRectangle.add(new Rectangle(monX.get(i), monY.get(i), monster.getWidth(), monster.getHeight()));
+                monRectangle.add(new Rectangle(monX.get(i), monY.get(i), monster.getWidth() / 2, monster.getHeight() / 2));
             }
 
             velocity = velocity + gravity;
@@ -161,11 +171,13 @@ public class MyGame extends ApplicationAdapter {
                 hero_YState = 0;
             }
 
-
+            //game state is to be cleared
         } else if (gameState == 0) {
             if (Gdx.input.isTouched()) {
+                //font1.draw(batch, "Game over, Touch anywhere to play!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
                 gameState = 1;
             }
+
             //waiting to start
         } else if (gameState == 2) {
 
@@ -221,12 +233,12 @@ public class MyGame extends ApplicationAdapter {
                 } else {
                     gameState = 2;
                 }
-
                 //gameState = 2;                  // check this logic
                 break;
             }
         }
         font.draw(batch, String.valueOf(score), 100, 1000);
+
         batch.end();
 
 
@@ -249,7 +261,6 @@ public class MyGame extends ApplicationAdapter {
                 }
                 for (int i = 0; i < monRectangle.size(); i++) {
                     if (Intersector.overlaps(heroRectangle, monRectangle.get(i))) {
-                        collision.play();
                         monRectangle.remove(i);
                         monX.remove(i);
                         monY.remove(i);
@@ -279,5 +290,6 @@ public class MyGame extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         bgmusic.dispose();
+        //  collision.dispose();
     }
 }
