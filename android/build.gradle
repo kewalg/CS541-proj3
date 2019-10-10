@@ -1,4 +1,11 @@
 android {
+    signingConfigs {
+        debug {
+            storeFile file('E:\\Courses\\Sem 3\\CS541\\CS541-proj3\\debug.keystore')
+            storePassword 'kewal123'
+            keyPassword 'kewal123'
+        }
+    }
     buildToolsVersion "29.0.2"
     compileSdkVersion 29
     sourceSets {

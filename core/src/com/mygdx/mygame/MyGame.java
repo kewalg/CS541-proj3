@@ -58,7 +58,7 @@ public class MyGame extends ApplicationAdapter {
     int monCount = 0;
     Rectangle heroRectangle;
     int score = 0;
-    BitmapFont font, font1;
+    BitmapFont font, font1, font2;
     int gameState = 0;
     private Music bgmusic;
     private Sound collision;
@@ -76,8 +76,11 @@ public class MyGame extends ApplicationAdapter {
         font.setColor(Color.WHITE);
         font.getData().setScale(10);
         font1 = new BitmapFont();
-        font1.getData().setScale(10, 10);
-        font1.setColor(Color.RED);
+        font1.getData().setScale(5, 5);
+        font1.setColor(Color.WHITE);
+        font2 = new BitmapFont();
+        font2.getData().setScale(5, 5);
+        font2.setColor(Color.WHITE);
         bgmusic = Gdx.audio.newMusic(Gdx.files.internal("bgmusic.mp3"));
         bgmusic.setLooping(true);
         bgmusic.setVolume(0.01f);
@@ -136,7 +139,6 @@ public class MyGame extends ApplicationAdapter {
     public void render() {
         batch.begin();
         batch.draw(bg, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
         font1.draw(batch, "Touch anywhere to play!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
 
         if (Gdx.input.isTouched()) {
@@ -149,7 +151,7 @@ public class MyGame extends ApplicationAdapter {
             //   font1.dispose();
             //game is live
             //after every 100 count, generate one monster
-            if (monCount < 100) {
+            if (monCount < 150) {
                 monCount++;
             } else {
                 monCount = 0;
@@ -181,6 +183,7 @@ public class MyGame extends ApplicationAdapter {
             //waiting to start
         } else if (gameState == 2) {
 
+            font2.draw(batch, "Touch anywhere to restart!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
             if (Gdx.input.isTouched()) {
                 gameState = 1;
                 hero_YState = Gdx.graphics.getHeight() / 2;
@@ -190,9 +193,9 @@ public class MyGame extends ApplicationAdapter {
                 monY.clear();
                 monRectangle.clear();
                 monCount = 0;
+
             }
         }
-
 
         //game live
         //after every 100 count, generate one monster
@@ -221,24 +224,23 @@ public class MyGame extends ApplicationAdapter {
         batch.draw(hero[heroPos], hero_XState, hero_YState);
         heroRectangle = new Rectangle(hero_XState, hero_YState, hero[heroPos].getWidth(), hero[heroPos].getHeight());
 
-        // hero logic for deleting monster by default.
+        // hero logic for deleting monster by default collision.
         for (int i = 0; i < monRectangle.size(); i++) {
             if (Intersector.overlaps(heroRectangle, monRectangle.get(i))) {
-                score++;
-                monRectangle.remove(i);
+                /*monRectangle.remove(i);
                 monX.remove(i);
                 monY.remove(i);
+                score++;*/
+                gameState = 2;
                 if (button.isPressed()) {
                     gameState = 1;
                 } else {
                     gameState = 2;
                 }
-                //gameState = 2;                  // check this logic
                 break;
             }
         }
         font.draw(batch, String.valueOf(score), 100, 1000);
-
         batch.end();
 
 
@@ -290,6 +292,5 @@ public class MyGame extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         bgmusic.dispose();
-        //  collision.dispose();
     }
 }
