@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -67,9 +68,10 @@ public class MyGame extends ApplicationAdapter {
     public void create() {
         String myText = "Touch anywhere to play!";
         batch = new SpriteBatch();
-        bg = new Texture("bg.png");
+        bg = new Texture("bg1.png");
         hero = new Texture[10];
-        hero_YState = Gdx.graphics.getHeight() / 2;
+        //hero_YState = Gdx.graphics.getHeight() / 2;
+        hero_YState = 0;
         hero_XState = 0;
         Random random;
         font = new BitmapFont();
@@ -89,16 +91,16 @@ public class MyGame extends ApplicationAdapter {
 
         //heroRectangle = new Rectangle();
         monster = new Texture("monster.png");
-        hero[0] = new Texture("frame_1.png");
-        hero[1] = new Texture("frame_2.png");
-        hero[2] = new Texture("frame_3.png");
-        hero[3] = new Texture("frame_4.png");
-        hero[4] = new Texture("frame_5.png");
-        hero[5] = new Texture("frame_6.png");
-        hero[6] = new Texture("frame_7.png");
-        hero[7] = new Texture("frame_8.png");
-        hero[8] = new Texture("frame_9.png");
-        hero[9] = new Texture("frame_10.png");
+        hero[0] = new Texture("hero_01.png");
+        hero[1] = new Texture("hero_02.png");
+        hero[2] = new Texture("hero_03.png");
+        hero[3] = new Texture("hero_04.png");
+        hero[4] = new Texture("hero_05.png");
+        hero[5] = new Texture("hero_06.png");
+        hero[6] = new Texture("hero_07.png");
+        hero[7] = new Texture("hero_08.png");
+        hero[8] = new Texture("hero_09.png");
+        hero[9] = new Texture("hero_10.png");
 
         //button for attacking
         myTexture = new Texture(Gdx.files.internal("attack.png"));
@@ -130,7 +132,7 @@ public class MyGame extends ApplicationAdapter {
 
     //class for generating monsters at random positions
     public void genMonsters() {
-        float height = random.nextFloat() * Gdx.graphics.getHeight();
+        float height = random.nextFloat() * (Gdx.graphics.getHeight() - 2);
         monY.add((int) height);
         monX.add(Gdx.graphics.getWidth());
     }
@@ -186,7 +188,8 @@ public class MyGame extends ApplicationAdapter {
             font2.draw(batch, "Touch anywhere to restart!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
             if (Gdx.input.isTouched()) {
                 gameState = 1;
-                hero_YState = Gdx.graphics.getHeight() / 2;
+                //hero_YState = Gdx.graphics.getHeight()/2;
+                hero_YState = 0;
                 score = 0;
                 velocity = 0;
                 monX.clear();
