@@ -62,11 +62,9 @@ public class MyGame extends ApplicationAdapter {
     BitmapFont font, font1, font2;
     int gameState = 0;
     private Music bgmusic;
-    private Sound collision;
 
     @Override
     public void create() {
-        String myText = "Touch anywhere to play!";
         batch = new SpriteBatch();
         bg = new Texture("bg1.png");
         hero = new Texture[10];
@@ -87,7 +85,7 @@ public class MyGame extends ApplicationAdapter {
         bgmusic.setVolume(0.01f);
         bgmusic.play();
 
-
+        //drawables
         monster = new Texture("monster.png");
         hero[0] = new Texture("hero_01.png");
         hero[1] = new Texture("hero_02.png");
@@ -124,7 +122,7 @@ public class MyGame extends ApplicationAdapter {
         inputMultiplexer.addProcessor(stage1);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        //random variable for generating monsters at random Y
+        //random variable for generating monsters at random position
         random = new Random();
     }
 
@@ -147,10 +145,9 @@ public class MyGame extends ApplicationAdapter {
             font1.dispose();
         }
 
-
         if (gameState == 1) {
             //game is live
-            //after every 100 count, generate one monster
+            //after every 150 count, generate one monster
             if (monCount < 150) {
                 monCount++;
             } else {
@@ -166,7 +163,7 @@ public class MyGame extends ApplicationAdapter {
                 //adding rectangle border to monster
                 monRectangle.add(new Rectangle(monX.get(i), monY.get(i), monster.getWidth() / 2, monster.getHeight() / 2));
             }
-
+            //making character jumpable
             velocity = velocity + gravity;
             hero_YState = hero_YState - velocity;
             if (hero_YState <= 0) {
@@ -181,7 +178,6 @@ public class MyGame extends ApplicationAdapter {
 
             //waiting to start
         } else if (gameState == 2) {
-
             font2.draw(batch, "Touch anywhere to restart!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
             if (Gdx.input.isTouched()) {
                 gameState = 1;
@@ -192,14 +188,13 @@ public class MyGame extends ApplicationAdapter {
                 monY.clear();
                 monRectangle.clear();
                 monCount = 0;
-
             }
         }
 
         batch.draw(hero[heroPos], hero_XState, hero_YState);
         heroRectangle = new Rectangle(hero_XState, hero_YState, (float) (hero[heroPos].getWidth()/1.5), (float) (hero[heroPos].getHeight()/1.5));
 
-        // hero logic for deleting monster by default collision.
+        //hero logic for deleting monster by default collision.
         for (int i = 0; i < monRectangle.size(); i++) {
             if (Intersector.overlaps(heroRectangle, monRectangle.get(i))) {
                 gameState = 2;
@@ -247,7 +242,7 @@ public class MyGame extends ApplicationAdapter {
 
         //button for jumping
         stage1.act(Gdx.graphics.getDeltaTime());
-        stage1.draw(); //Draw the ui
+        stage1.draw();
         button1.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
