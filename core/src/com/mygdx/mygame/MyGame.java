@@ -70,7 +70,6 @@ public class MyGame extends ApplicationAdapter {
         batch = new SpriteBatch();
         bg = new Texture("bg1.png");
         hero = new Texture[10];
-        //hero_YState = Gdx.graphics.getHeight() / 2;
         hero_YState = 0;
         hero_XState = 0;
         Random random;
@@ -89,7 +88,6 @@ public class MyGame extends ApplicationAdapter {
         bgmusic.play();
 
 
-        //heroRectangle = new Rectangle();
         monster = new Texture("monster.png");
         hero[0] = new Texture("hero_01.png");
         hero[1] = new Texture("hero_02.png");
@@ -107,7 +105,7 @@ public class MyGame extends ApplicationAdapter {
         myTextureRegion = new TextureRegion(myTexture);
         myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
         button = new ImageButton(myTexRegionDrawable);
-        button.setPosition(1600, 100);
+        button.setPosition(1550, 100);
 
         //button for jumping
         myTexture1 = new Texture(Gdx.files.internal("jump.png"));
@@ -126,6 +124,7 @@ public class MyGame extends ApplicationAdapter {
         inputMultiplexer.addProcessor(stage1);
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+        //random variable for generating monsters at random Y
         random = new Random();
     }
 
@@ -150,7 +149,6 @@ public class MyGame extends ApplicationAdapter {
 
 
         if (gameState == 1) {
-            //   font1.dispose();
             //game is live
             //after every 100 count, generate one monster
             if (monCount < 150) {
@@ -178,7 +176,6 @@ public class MyGame extends ApplicationAdapter {
             //game state is to be cleared
         } else if (gameState == 0) {
             if (Gdx.input.isTouched()) {
-                //font1.draw(batch, "Game over, Touch anywhere to play!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
                 gameState = 1;
             }
 
@@ -188,7 +185,6 @@ public class MyGame extends ApplicationAdapter {
             font2.draw(batch, "Touch anywhere to restart!", Gdx.graphics.getWidth() / 2 - Gdx.graphics.getWidth() / 5, Gdx.graphics.getHeight() / 2);
             if (Gdx.input.isTouched()) {
                 gameState = 1;
-                //hero_YState = Gdx.graphics.getHeight()/2;
                 hero_YState = 0;
                 score = 0;
                 velocity = 0;
@@ -200,40 +196,12 @@ public class MyGame extends ApplicationAdapter {
             }
         }
 
-        //game live
-        //after every 100 count, generate one monster
-       /* if (monCount < 100) {
-            monCount++;
-        } else {
-            monCount = 0;
-            genMonsters();
-        }
-
-        //drawing monsters on screen
-        monRectangle.clear();
-        for (int i = 0; i < monY.size(); i++) {
-            batch.draw(monster, monX.get(i), monY.get(i));
-            monX.set(i, monX.get(i) - 4);
-            //adding rectangle border to monster
-            monRectangle.add(new Rectangle(monX.get(i), monY.get(i), monster.getWidth(), monster.getHeight()));
-        }
-
-        velocity = velocity + gravity;
-        hero_YState = hero_YState - velocity;
-        if (hero_YState <= 0) {
-            hero_YState = 0;
-        }
-*/
         batch.draw(hero[heroPos], hero_XState, hero_YState);
-        heroRectangle = new Rectangle(hero_XState, hero_YState, hero[heroPos].getWidth(), hero[heroPos].getHeight());
+        heroRectangle = new Rectangle(hero_XState, hero_YState, (float) (hero[heroPos].getWidth()/1.5), (float) (hero[heroPos].getHeight()/1.5));
 
         // hero logic for deleting monster by default collision.
         for (int i = 0; i < monRectangle.size(); i++) {
             if (Intersector.overlaps(heroRectangle, monRectangle.get(i))) {
-                /*monRectangle.remove(i);
-                monX.remove(i);
-                monY.remove(i);
-                score++;*/
                 gameState = 2;
                 if (button.isPressed()) {
                     gameState = 1;
@@ -248,7 +216,7 @@ public class MyGame extends ApplicationAdapter {
 
 
         //button for attack
-        stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
         button.addListener(new EventListener() {
             @Override
@@ -278,7 +246,7 @@ public class MyGame extends ApplicationAdapter {
         });
 
         //button for jumping
-        stage1.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+        stage1.act(Gdx.graphics.getDeltaTime());
         stage1.draw(); //Draw the ui
         button1.addListener(new EventListener() {
             @Override
